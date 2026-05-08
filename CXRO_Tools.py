@@ -3,16 +3,18 @@ import bs4
 import urllib
 import numpy as np
 
-class Filter:
+class Filter_Transmission:
+    """
+    Connects to CXRO to work with their Filter Transmission calculator
+
+    Key Methods:
+        get_transmission: Returns a list of ordered pairs corresponding to energy and transmission for a given material and thickness.
+    """
     URLBASE = 'https://henke.lbl.gov'
     MAX_STEP = 999
     script = "filter.pl"
     def __init__(self):
         pass
-
-    def test_connection(self):
-        url = self.URLBASE
-        return requests.get(url)
 
     def _post(self, data):
         url = urllib.request.urljoin(self.URLBASE, '/cgi-bin/' + self.script)
@@ -34,7 +36,8 @@ class Filter:
         s = self._retrieve_data(response)
         return self._parse_data(s)
     
-    def create_data(self, chemical_formula : str, thickness : float, energy_min : int, energy_max : int, steps : int = 100):
+    def _create_data(self, chemical_formula : str, thickness : float, energy_min : int, energy_max : int, steps : int = 100):
+        """Returns dictionary containing all necessary values for accessing CXRO Filter Transmission Data"""
         data = {}
         data['Materia'] = "Enter Formula"
         data['Formula'] = chemical_formula
@@ -48,12 +51,24 @@ class Filter:
         return data
 
 
-
     def get_transmission(self, chemical_formula : str, thickness : float, energy_min : int, energy_max : int, steps : int = 100):
-        data = self.create_data(chemical_formula, thickness, energy_min, energy_max, steps)
+        """
+        Returns ordered pairs of [energy (eV), transmission]. Takes arguments for options on CXRO Filter Transmission calculator.
 
-        
+        Args:
+            chemical_formula (str): The chemical formula of your filter. E.g. Si, Si3N4
+            thickness (float): Thickness (in microns) of your filter.
+            energy_min (int): Minimum energy to be included in dataset.
+            energy_max (int): Maximum energy to be included in dataset.
+            steps (int, optional): Number of steps between min and max energies to be included in dataset. Defaults to 100.
+
+        Returns:
+            list: List of ordered pairs relating each energy in dataset to its transmission.
+        """
+        data = self._create_data(chemical_formula, thickness, energy_min, energy_max, steps)
+
         return self._process(data)
+
 
 if __name__=="__main__":
     CXRO_connector = Filter()
