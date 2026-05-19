@@ -71,7 +71,7 @@ class Filter_Transmission:
 
 
 if __name__=="__main__":
-    CXRO_connector = Filter()
+    CXRO_connector = Filter_Transmission()
     print(CXRO_connector.get_transmission('Si', 5, 30, 2000, 100))
     array = CXRO_connector.get_transmission('Si', 5, 30, 2000, 100)
     for i in array:
