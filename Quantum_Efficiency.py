@@ -28,8 +28,21 @@ def QE_Interpolated_Function(x, min : float, max : float, Si_thickness : float, 
     return interpolated_QE(x)
 
 if __name__ == "__main__":
-    y = QE_Interpolated_Function(range(30, 2000, 50), 30, 2000, 5, 0.1, 0.1, 0.05, 100)
-    test_range = range(30, 2000, 50)
-    plt.plot(test_range, y)
+    min = 30
+    max = 2000
+    x = np.arange(80, 1200, 50)
+    composition = [
+        {"Chemical Formula" : "Si",
+         "Thickness" : 1,
+         "is_detector": True
+        },
+        {
+         "Chemical Formula" : "SiO2",
+         "Thickness" : 0.1,
+         "is_detector": False
+        }
+    ]
+    transmission = QE_Interpolated_Function(x, min, max, Si_thickness=1, C_thickness=0, SiO2_thickness=0.1, Fe_thickness=0)
+    plt.plot(x, transmission)
     plt.show()
     

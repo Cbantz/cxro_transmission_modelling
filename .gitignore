@@ -1,1 +1,4 @@
-__pycache__/260520_CMOS-QE-Export.npy
+__pycache__/*
+cxro_saved_data/*
+*.ipynb
+*.npy
