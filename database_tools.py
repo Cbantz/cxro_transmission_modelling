@@ -1,8 +1,8 @@
-from CXRO_Tools import Filter_Transmission
+from CXRO_Tools import get_transmission
 import numpy as np
 from pathlib import Path
 
-cxro = Filter_Transmission()
+
 def add_database_item(chemical_formula : str, thickness : float, energy_min : int, energy_max : int, steps : int = 100):
 
     filepath = get_formatted_filepath(chemical_formula=chemical_formula, thickness=thickness, energy_min=energy_min, energy_max=energy_max, steps=steps)
@@ -10,7 +10,7 @@ def add_database_item(chemical_formula : str, thickness : float, energy_min : in
     if filepath.is_file():
         print(f"{filepath} already exists. Skipping.")
         return
-    data = np.array(cxro.get_transmission(chemical_formula=chemical_formula, thickness=thickness, energy_max=energy_max, energy_min=energy_min, steps=steps))
+    data = np.array(get_transmission(chemical_formula=chemical_formula, thickness=thickness, energy_max=energy_max, energy_min=energy_min, steps=steps))
     if data.size > 0:
         np.save(filepath, data)
 
