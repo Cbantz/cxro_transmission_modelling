@@ -8,7 +8,7 @@ def add_database_item(chemical_formula : str, thickness : float, energy_min : in
     filepath = get_formatted_filepath(chemical_formula=chemical_formula, thickness=thickness, energy_min=energy_min, energy_max=energy_max, steps=steps)
 
     if filepath.is_file():
-        print(f"{filepath} already exists. Skipping.")
+        #print(f"{filepath} already exists. Skipping.")
         return
     data = np.array(get_transmission(chemical_formula=chemical_formula, thickness=thickness, energy_max=energy_max, energy_min=energy_min, steps=steps))
     if data.size > 0:
