@@ -38,6 +38,7 @@ def do_QE_fit(x, y, yerr, energy_min : int, energy_max : int, initial_guesses : 
     return result
 
 if __name__ == "__main__":
+    from time import process_time
     initial_guesses_list = [
     Initial_Guess(
         chemical_formula="Si",
@@ -50,20 +51,26 @@ if __name__ == "__main__":
     Initial_Guess(
         chemical_formula="SiO2",
         thickness=0.5,
-        min_thickness=0.01,
+        min_thickness=0,
         max_thickness=2,
         decimals=2
     ),
     Initial_Guess(
         chemical_formula="C7H10O3",
         thickness=0.5,
-        min_thickness=0.01,
+        min_thickness=0,
         max_thickness=2,
         decimals=2
     )
-]
+    ]
     real_data = np.load("260520_CMOS-QE-Export.npy")
     x, y = real_data[0,3:], real_data[1,3:]
     yerr = real_data[2,3:]
+    start_time = process_time()
     result : lmfit.model.ModelResult = do_QE_fit(x, y, yerr, 30, 2000, initial_guesses_list, "differential_evolution")
+    end_time = process_time()
+    print(f"Time to fit: {end_time-start_time} seconds")
     print(result.fit_report())
+    plot = result.plot(show_init=True)
+    plt.show()
+    

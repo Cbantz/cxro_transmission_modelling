@@ -17,6 +17,8 @@ def QE_Interpolated_Function(x, energy_min : float, energy_max : float, composit
     other_transmission_arrays = []
 
     for element in composition:
+        if element.thickness == 0:
+            continue # Don't do the rest of the for loop if no thickness
         if(use_database):
             add_database_item(chemical_formula=element.chemical_formula, thickness=element.thickness, energy_min=energy_min, energy_max=energy_max, steps=steps)
             element.cxro_data = np.load(get_formatted_filepath(chemical_formula=element.chemical_formula, thickness=element.thickness, energy_min=energy_min, energy_max=energy_max, steps=steps))
