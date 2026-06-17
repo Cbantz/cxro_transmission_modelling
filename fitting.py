@@ -61,6 +61,13 @@ if __name__ == "__main__":
         min_thickness=0,
         max_thickness=2,
         decimals=2
+    ),
+    Initial_Guess(
+        chemical_formula="Fe",
+        thickness=0.5,
+        min_thickness=0,
+        max_thickness=2,
+        decimals=2
     )
     ]
     real_data = np.load("260520_CMOS-QE-Export.npy")

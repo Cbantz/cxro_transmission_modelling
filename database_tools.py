@@ -10,8 +10,10 @@ def add_database_item(chemical_formula : str, thickness : float, energy_min : in
     if filepath.is_file():
         #print(f"{filepath} already exists. Skipping.")
         return
+
     data = np.array(get_transmission(chemical_formula=chemical_formula, thickness=thickness, energy_max=energy_max, energy_min=energy_min, steps=steps))
     if data.size > 0:
+        filepath.parent.mkdir(exist_ok=True)
         np.save(filepath, data)
 
     print(f"Saved array to {filepath}. Parameters: Chemical Formula = {chemical_formula}, Thickness = {thickness}μm, Energy Range: {energy_min}eV-{energy_max}eV, Steps: {steps}")
