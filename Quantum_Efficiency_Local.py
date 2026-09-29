@@ -20,9 +20,9 @@ def QE_Interpolated_Function(x, energy_min : float, energy_max : float, composit
         if element.thickness == 0:
             continue # Don't do the rest of the for loop if no thickness
         if(use_database):
-            #Use local stored data or pull from website and save to local stored data
-            add_database_item(chemical_formula=element.chemical_formula, thickness=element.thickness, energy_min=energy_min, energy_max=energy_max, steps=steps)
-            element.cxro_data = np.load(get_formatted_filepath(chemical_formula=element.chemical_formula, thickness=element.thickness, energy_min=energy_min, energy_max=energy_max, steps=steps))
+            #Using Local Storage
+            add_database_item(chemical_formula=element.chemical_formula, thickness=element.thickness, energy_min=energy_min, energy_max=energy_max, steps=steps) #Will skip if already found
+            element.cxro_data = np.load(get_formatted_filepath(chemical_formula=element.chemical_formula, thickness=element.thickness, energy_min=energy_min, energy_max=energy_max, steps=steps)) #Loading transmission data from local storage
         else:
             #Pull from website
             element.cxro_data = np.array(get_transmission(chemical_formula=element.chemical_formula, thickness=element.thickness, energy_max=energy_max, energy_min=energy_min, steps=steps))
