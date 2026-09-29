@@ -6,7 +6,7 @@ from database_tools import add_database_item, get_formatted_filepath
 from Element_Layer import Element_Layer
 from CXRO_Tools import get_transmission
 
-def QE_Interpolated_Function(x, energy_min : float, energy_max : float, composition : Sequence[Element_Layer], steps : float = 100, use_database : bool = True):
+def QE_Interpolated_Function(x, energy_min : float, energy_max : float, composition : Sequence[Element_Layer], eff_pixel_size : float = 1, steps : float = 100, use_database : bool = True):
     #Conversion from float to int to work between lmfit and cxro. lmfit sends floats.
     energy_min=int(energy_min)
     energy_max=int(energy_max)
@@ -20,9 +20,11 @@ def QE_Interpolated_Function(x, energy_min : float, energy_max : float, composit
         if element.thickness == 0:
             continue # Don't do the rest of the for loop if no thickness
         if(use_database):
+            #Use local stored data or pull from website and save to local stored data
             add_database_item(chemical_formula=element.chemical_formula, thickness=element.thickness, energy_min=energy_min, energy_max=energy_max, steps=steps)
             element.cxro_data = np.load(get_formatted_filepath(chemical_formula=element.chemical_formula, thickness=element.thickness, energy_min=energy_min, energy_max=energy_max, steps=steps))
         else:
+            #Pull from website
             element.cxro_data = np.array(get_transmission(chemical_formula=element.chemical_formula, thickness=element.thickness, energy_max=energy_max, energy_min=energy_min, steps=steps))
         if element.is_detector == True:
             detector_transmission_arrays.append(element.cxro_data[:,1])
@@ -39,7 +41,7 @@ def QE_Interpolated_Function(x, energy_min : float, energy_max : float, composit
 
     detector_transmission = np.prod(detector_transmission_arrays, 0)
     other_transmission = np.prod(other_transmission_arrays, 0)
-    QE = (1-detector_transmission) * other_transmission
+    QE = eff_pixel_size * (1-detector_transmission) * other_transmission
     interpolated_QE = interpolate.PchipInterpolator(energies, QE)
 
     return interpolated_QE(x)
@@ -61,7 +63,7 @@ if __name__ == "__main__":
         )
     ]
     start_time = process_time()
-    transmission = QE_Interpolated_Function(x, min, max, composition)
+    transmission = QE_Interpolated_Function(x, min, max, composition, eff_pixel_size=0)
     end_time = process_time()
     print(end_time-start_time)
     plt.scatter(x, transmission)
